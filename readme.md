@@ -16,11 +16,11 @@ Second, install [ffmpeg](https://www.wikihow.com/Install-FFmpeg-on-Windows)
 Third, A server that can be able to serve files.  
 In this tutorial I'll use `input.mkv` as source movie file and `Movie.mp4` as a result file for playing inside VRChat.  
 
-## Video
+# Video
 You might need to re-encode your video to be able to watch it with your friends inside vrc. If your video is already H264 encoded with 1080p, yuv420p pixel format, and has resonable bitrate (4-10 mbps). You can just skip the encodeing part and do a stream copy.  
 
 
-###Stream copy
+## Stream copy
 
 ```
 ffmpeg 
@@ -28,11 +28,13 @@ ffmpeg
   -map 0:v \
   -map 0:a \
   -c copy \
-  output.mp4
+  -movflags +faststart \
+  Movie.mp4
 ```
 
+But if your movie isn't ready for streaming (Blu-ray rip) consider encodering to lower bitrate.  
 
-### x264 software encoder
+## x264 software encoder
 ```
 ffmpeg -hwaccel cuda \
   -i "input.mkv" \
@@ -43,10 +45,10 @@ ffmpeg -hwaccel cuda \
   -profile:v high -pix_fmt yuv420p \
   -g 95.88 \
   -crf 23 -maxrate 6M -bufsize 12M \
-  output.mp4
+  video.mp4
 ```
 
-###Explain this (for nerd)
+### Explain this (for nerd)
   
   `-hwaccel cuda` use CUDA for decoding a video, remove this if you don't have Nvidia GPU  
   `-vf scale=1920:-2:flags=lanczos` Scale a video to 1080p, max recommended for vrc video.  
@@ -58,7 +60,7 @@ ffmpeg -hwaccel cuda \
   `-crf 23 -maxrate 6M -bufsize 12M` Change your prefered bitrate here, for 1080p video I recommned max bitrate at 6Mbps for 1080p video. `bufsize` should be twice the max bitrate. and crf 23 should be good enough.
 
 
-### NVENC Hardware encoder (Nvidia)
+## NVENC Hardware encoder (Nvidia)
 ```
 ffmpeg -hwaccel cuda \
   -i input.mkv \
@@ -71,7 +73,7 @@ ffmpeg -hwaccel cuda \
   -cq 27 -maxrate 6M -bufsize 12M \
   video.mp4
 ```
-###Explain this (for nerd)
+### Explain this (for nerd)
   
   `-hwaccel cuda` use CUDA for decoding a video  
   `-vf scale=1920:-2:flags=lanczos` Scale a video to 1080p, max recommended for vrc video.  
@@ -84,7 +86,7 @@ ffmpeg -hwaccel cuda \
 
 x264 should produce video with better quality and file size, but nothing stopping you from putting more bit rate into your video, as it come down to how many bandwidth for your server has?  
 
-### 4K HDR content
+## 4K HDR content
 VRChat doesn't support HDR. There's a way to tone mapping HDR to SDR using ffmpeg.
 
 ```
@@ -131,7 +133,7 @@ In this exsample from ffprobe, Look for `5.1` and `ac3` or `eac3`, that codec sh
 
 ```
 ffmpeg \
-  -i movie.mp4 \
+  -i video.mp4 \
   -i input.mkv \
   -map 0:v \
   -map 1:a:2 \
@@ -140,11 +142,11 @@ ffmpeg \
   Movie.mp4
 ```
 You're done and ready, put this on your server and URL inside video player.  
-### My file is DTS or Truehd encoded audio
+## My file is DTS or Truehd encoded audio
 DTS audio doesn't support inside VRChat. You can convert that into `aac` by using this ffmpeg command.
 ```
 ffmpeg \
-  -i movie.mp4 \
+  -i video.mp4 \
   -i input.mkv \
   -map 0:v \
   -map 1:a:2 \
@@ -164,11 +166,11 @@ The work around is to find the E-AC-3 encoder. Unfortunately ffmpeg has broken i
 The only way to use 7.1 without E-AC-3 codec is to use `pcm` audio with `mov` container, Nothing will stop you from using that except you and your friends has limited internet bandwidth, and server cost.
 
 
-###ffmpeg command
+### ffmpeg command
 
 ```
 ffmpeg \
-  -i movie.mp4 \
+  -i video.mp4 \
   -i input.mkv \
   -map 0:v \
   -map 1:a:2 \
@@ -180,7 +182,7 @@ ffmpeg \
 
 If you really wanted to get E-AC-3 inside the file. The only method is to use propriety software (ugh) called Adobe Audition CC 2017. It's needs to be 2017 version of Adobe Audition, because that the last version to support E-AC-3 encoding.
 
-##Adobe Audition CC 2017 with E-AC-3
+## Adobe Audition CC 2017 with E-AC-3
 First, you extract audio from your movie.
 
 ```
@@ -210,7 +212,7 @@ Hit ok and save it somewhere. In this case I'll save it as `audio.ec3`
 Now move on to another ffmpeg command.  
 ```
 ffmpeg \
-  -i movie.mp4 \
+  -i video.mp4 \
   -i audio.ec3 \
   -map 0:v \
   -map 1:a \
@@ -249,10 +251,6 @@ This audio preset is for using with Atmos file decoded with [Cavern](https://cav
 | ----------- | ----------- |
 | Side-Left   | Top-Center  |
 | Side-Right  | Back-Center |
-
-### HRTF
-Head-related transfer function  
-This work by placing Left and Right speaker channels directly next to your ears. It need HRTF or Binaural stereo encoded file, and require you to sit at the center of sofa. This will sounds like you're using AirPods Pro with Dolby Atmos.
 
 ### Global
 This is VideoTXL default global audio, you'll hear everything everywhere like you're wearing a headphone. Only stereo audio (Front-Left, Front-Right) will be heard.
