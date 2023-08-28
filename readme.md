@@ -251,8 +251,8 @@ This will remapped 7.1 setup to 5.1.2 reference from [5.1.2 Overhead speaker set
 
 | Original channels (audio file)     | Re-mapped channels |
 | ----------- | ----------- |
-| Back-Left | Top-Left |
-| Back-Right | Top-Right |
+| Back-Left   | Top-Left    |
+| Back-Right  | Top-Right   |
 
 You might have to experiment with channel mapping from 5.1.2 in 7.1 coded audio channel. I'll write the guide soon.  
 
@@ -260,8 +260,8 @@ You might have to experiment with channel mapping from 5.1.2 in 7.1 coded audio 
 This audio preset is for using with Atmos file decoded with [Cavern](https://cavern.sbence.hu/cavern/) and encoded with 5.1 audio channels.  
 | Original channels (audio file)     | Re-mapped channels |
 | ----------- | ----------- |
-| Side-Left | Top-Center |
-| Side-Right | Back-Center |
+| Side-Left   | Top-Center  |
+| Side-Right  | Back-Center |
 
 ### HRTF
 Head-related transfer function  
