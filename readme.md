@@ -19,9 +19,8 @@ In this tutorial I'll use `input.mkv` as source movie file and `Movie.mp4` as a 
 ## Video
 You might need to re-encode your video to be able to watch it with your friends inside vrc. If your video is already H264 encoded with 1080p, yuv420p pixel format, and has resonable bitrate (4-10 mbps). You can just skip the encodeing part and do a stream copy.  
 
-<details>
 
-<summary>Stream copy.</summary>
+###Stream copy
 
 ```
 ffmpeg 
@@ -31,8 +30,7 @@ ffmpeg
   -c copy \
   output.mp4
 ```
-  
-</details>
+
 
 ### x264 software encoder
 ```
@@ -47,9 +45,8 @@ ffmpeg -hwaccel cuda \
   -crf 23 -maxrate 6M -bufsize 12M \
   output.mp4
 ```
-<details>
 
-<summary>Explain this (for nerd)</summary>
+###Explain this (for nerd)
   
   `-hwaccel cuda` use CUDA for decoding a video, remove this if you don't have Nvidia GPU  
   `-vf scale=1920:-2:flags=lanczos` Scale a video to 1080p, max recommended for vrc video.  
@@ -59,8 +56,6 @@ ffmpeg -hwaccel cuda \
   `-profile:v high -pix_fmt yuv420p` Use high prefole and yuv420p for pixel format. **Pixel format other than yuv420p will crash vrc.**  
   `-g 95.88` 4 second GOP, you might wanted to adjust this to fir your movie fps. `FPS*4 for GOP size`   
   `-crf 23 -maxrate 6M -bufsize 12M` Change your prefered bitrate here, for 1080p video I recommned max bitrate at 6Mbps for 1080p video. `bufsize` should be twice the max bitrate. and crf 23 should be good enough.
-  
-</details>
 
 
 ### NVENC Hardware encoder (Nvidia)
@@ -76,9 +71,7 @@ ffmpeg -hwaccel cuda \
   -cq 27 -maxrate 6M -bufsize 12M \
   video.mp4
 ```
-<details>
-
-<summary>Explain this (for nerd)</summary>
+###Explain this (for nerd)
   
   `-hwaccel cuda` use CUDA for decoding a video  
   `-vf scale=1920:-2:flags=lanczos` Scale a video to 1080p, max recommended for vrc video.  
@@ -88,8 +81,6 @@ ffmpeg -hwaccel cuda \
   `-bf 2 -g 95.88 -rc-lookahead 48` insert 2 B-frame, 4 second GOP, Lookahead for vbr rate control for 48 frames. you might wanted to adjust this to fir your movie fps. `FPS*4 for GOP size` `FPS*2 for rate control`  
   `-2pass 1 -multipass fullres -no-scenecut 1 -spatial-aq 1 -temporal-aq 1` NVENC thing  
   `-cq 27 -maxrate 6M -bufsize 12M` Change your prefered bitrate here, for 1080p video I recommned max bitrate at 6Mbps for 1080p video. `bufsize` should be twice the max bitrate. and 27 qp should be good enough.
-  
-</details>
 
 x264 should produce video with better quality and file size, but nothing stopping you from putting more bit rate into your video, as it come down to how many bandwidth for your server has?  
 
@@ -171,9 +162,9 @@ If your file is EAC3 encoded, you can do the same procedures as above. If your f
 The work around is to find the E-AC-3 encoder. Unfortunately ffmpeg has broken imprementaion of E-AC-3 and only support up to 5.1 channels.  
 
 The only way to use 7.1 without E-AC-3 codec is to use `pcm` audio with `mov` container, Nothing will stop you from using that except you and your friends has limited internet bandwidth, and server cost.
-<details>
 
-<summary>ffmpeg command</summary>
+
+###ffmpeg command
 
 ```
 ffmpeg \
@@ -186,13 +177,10 @@ ffmpeg \
   -movflags +faststart \
   Movie.mov
 ```
-</details>
 
 If you really wanted to get E-AC-3 inside the file. The only method is to use propriety software (ugh) called Adobe Audition CC 2017. It's needs to be 2017 version of Adobe Audition, because that the last version to support E-AC-3 encoding.
 
-<details>
-
-<summary>Adobe Audition CC 2017 with E-AC-3</summary>
+##Adobe Audition CC 2017 with E-AC-3
 First, you extract audio from your movie.
 
 ```
@@ -232,8 +220,6 @@ ffmpeg \
 ```
 Done, you're now getting movie inside VRChat with fancy 7.1 E-AC-3 codec.
 
-</details>
-
 # Dolby Atmos
 There's no decoding for Dolby Atmos inside VRChat. Unless you use [Cavern](https://cavern.sbence.hu/cavern/) to decode Dolby Atmos into 5.1.2 channel, and select 5.1.2 audio preset inside the video player.
 
@@ -258,6 +244,7 @@ You might have to experiment with channel mapping from 5.1.2 in 7.1 coded audio 
 
 ### Cavern 4.1.1
 This audio preset is for using with Atmos file decoded with [Cavern](https://cavern.sbence.hu/cavern/) and encoded with 5.1 audio channels.  
+
 | Original channels (audio file)     | Re-mapped channels |
 | ----------- | ----------- |
 | Side-Left   | Top-Center  |
