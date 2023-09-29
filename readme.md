@@ -254,3 +254,14 @@ This audio preset is for using with Atmos file decoded with [Cavern](https://cav
 
 ### Global
 This is VideoTXL default global audio, you'll hear everything everywhere like you're wearing a headphone. Only stereo audio (Front-Left, Front-Right) will be heard.
+
+# Dolby Atmos: The hard and expensive way
+This will require 
+- Atmos compatible AV receiver that have "Pre-out"
+- 8 input audio interface 
+- DAW capable of ASIO and recording 8 tracks simultaneously
+- a bunch of RCA cables and RCA to TS or XLR adapter (depended on interface you use)
+
+![pain](https://user-images.githubusercontent.com/136845818/271540716-8e455e20-7b03-480a-87a1-c3da34d32293.png)  
+
+If your AV receiver doesn't have pre-out **DO NOT HOOK UP LINE-IN INTO SPEAKER PLUG** Those are amplified signal, and it will kill your interface.
